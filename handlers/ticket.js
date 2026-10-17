@@ -1,11 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits } = require('discord.js');
-const mongoose = require('mongoose');
-
-const ticketSchema = new mongoose.Schema({
-    guildId: { type: String, required: true, unique: true },
-    channelId: { type: String, required: true }
-});
-const TicketSetup = mongoose.model('TicketSetup', ticketSchema);
+const TicketSetup = require('../models/Ticket');
 
 module.exports = (client) => {
     client.on('interactionCreate', async (interaction) => {
