@@ -1,10 +1,4 @@
-const mongoose = require('mongoose');
-
-const autoroleSchema = new mongoose.Schema({
-    guildId: { type: String, required: true, unique: true },
-    roleId: { type: String, required: true }
-});
-const AutoRole = mongoose.model('AutoRole', autoroleSchema);
+const AutoRole = require('../models/AutoRole');
 
 module.exports = (client) => {
     client.on('guildMemberAdd', async (member) => {
