@@ -1,4 +1,6 @@
 // handlers/nuke.js
+const guild = message.guild;
+const command = message.content.toLowerCase();
 const { ChannelType } = require("discord.js");
 
 let welcomeInterval = null;
