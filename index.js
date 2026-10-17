@@ -23,7 +23,7 @@ require('dotenv').config();
 // 1. Authorized Bot Owners
 const BOT_OWNERS = [
     '1549995551288852584',
-    '1266728371719508062', 
+    '1560923218787827817', 
     '1474216218792558735'
 ];
 
