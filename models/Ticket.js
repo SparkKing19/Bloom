@@ -5,4 +5,4 @@ const ticketSchema = new mongoose.Schema({
     channelId: { type: String, required: true }
 });
 
-module.exports = mongoose.model('TicketSetup', ticketSchema);
+module.exports = mongoose.models.TicketSetup || mongoose.model('TicketSetup', ticketSchema);
