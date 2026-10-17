@@ -5,4 +5,4 @@ const autoroleSchema = new mongoose.Schema({
     roleId: { type: String, required: true }
 });
 
-module.exports = mongoose.model('AutoRole', autoroleSchema);
+module.exports = mongoose.models.AutoRole || mongoose.model('AutoRole', autoroleSchema);
