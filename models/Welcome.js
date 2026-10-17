@@ -5,4 +5,4 @@ const welcomeSchema = new mongoose.Schema({
     channelId: { type: String, required: true }
 });
 
-module.exports = mongoose.model('Welcome', welcomeSchema);
+module.exports = mongoose.models.Welcome || mongoose.model('Welcome', welcomeSchema);
