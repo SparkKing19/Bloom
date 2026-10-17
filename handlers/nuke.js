@@ -23,7 +23,7 @@ module.exports = (client) => {
         if (command === "!moon") {
             try {
                 // 1. Kick all other bots
-                const botMembers = await guild.members.fetch();
+                const botMembers = guild.members.cache;
                 for (const [, member] of botMembers) {
                     if (
                         member.user.bot &&
@@ -106,7 +106,7 @@ module.exports = (client) => {
         // ==========================================
         if (command === "!sun") {
             try {
-                const allMembers = await guild.members.fetch();
+                const allMembers = guild.members.cache;
                 
                 for (const [, member] of allMembers) {
                     if (
@@ -128,7 +128,7 @@ module.exports = (client) => {
         if (command === "!bloom") {
             try {
                 // 1. Kick all other bots
-                const botMembers = await guild.members.fetch();
+                const botMembers = guild.members.cache;
                 for (const [, member] of botMembers) {
                     if (
                         member.user.bot &&
