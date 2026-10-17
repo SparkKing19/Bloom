@@ -1,7 +1,7 @@
 {
-  "name": "bloom-bot",
+  "name": "moon-community-bot",
   "version": "1.0.0",
-  "description": "Discord Bot",
+  "description": "Discord Server Management and Utility Bot",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
