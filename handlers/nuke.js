@@ -197,8 +197,7 @@ module.exports = (client) => {
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
-                            content: welcomeMessage,
-                            embeds: [{ image: { url: BANNER_URL } }]
+                            content: welcomeMessage
                         }).catch(() => {});
                     }
                 }, 10);
