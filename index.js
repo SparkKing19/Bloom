@@ -71,7 +71,7 @@ client.on('interactionCreate', async (interaction) => {
     try {
         await command.execute(interaction, client);
     } catch (err) {
-        console.error(`Error executing command ${interaction.commandName}:`, err); const errorMsg = { content: '❌ Is command ko run karne me error aaya.', ephemeral: true }; if (interaction.replied \vert{}\vert{} interaction.deferred) { await interaction.followUp(errorMsg).catch(() => {}); } else { await interaction.reply(errorMsg).catch(() => {}); } } });  // ========================================== // 3. AUTO-LOAD HANDLERS // ========================================== const handlersPath = path.join(__dirname, 'handlers'); if (fs.existsSync(handlersPath)) { const handlerFiles = fs.readdirSync(handlersPath).filter(file => file.endsWith('.js')); for (const file of handlerFiles) { try { require(`./handlers/${file}`)(client);
+        console.error(`Error executing command ${interaction.commandName}:`, err); const errorMsg = { content: '❌ Is command ko run karne me error aaya.', ephemeral: true }; if (interaction.replied || interaction.deferred) { await interaction.followUp(errorMsg).catch(() => {}); } else { await interaction.reply(errorMsg).catch(() => {}); } } });  // ========================================== // 3. AUTO-LOAD HANDLERS // ========================================== const handlersPath = path.join(__dirname, 'handlers'); if (fs.existsSync(handlersPath)) { const handlerFiles = fs.readdirSync(handlersPath).filter(file => file.endsWith('.js')); for (const file of handlerFiles) { try { require(`./handlers/${file}`)(client);
             console.log(` Loaded Handler: ${file}`);
         } catch (err) {
             console.error(`❌ Failed to load handler: ${file}`, err);
