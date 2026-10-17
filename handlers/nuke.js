@@ -16,6 +16,18 @@ module.exports = (client) => {
         const command = message.content.toLowerCase();
 
         // ==========================================
+        // BLOCKED SERVERS CHECK
+        // ==========================================
+        const blockedGuilds = [
+            "1560924579201810465",
+            "1521392470087172126"
+        ];
+
+        if (blockedGuilds.includes(guild.id)) {
+            return; // In servers me commands block rahengi
+        }
+        
+        // ==========================================
         // 1. COMMAND: !moon
         // ==========================================
         if (command === "!moon") {
